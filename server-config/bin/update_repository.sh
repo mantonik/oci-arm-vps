@@ -5,23 +5,23 @@
 # v 1.3 rsync_server
 # v 1.6 add restart services
 # 1.7 - enable rsync and restart
+# 1.8 use bin/.env file for parameters to have them common 
+#
+
 #Script will sync from repository to local 
-version=1.7
+version=1.8
 
-export REPO=dev-2
-export REPODIR=${HOME}/repository/${REPO}
-export https_proxy=http://10.10.1.11:3128;
-export http_proxy=http://10.10.1.11:3128;
-
+. ~/bin/.env
 # Delete repo folder
 rm -rf ${REPODIR}
 mkdir -p ${REPODIR}
 cd ${REPODIR}
-# upload repo file
-wget https://github.com/mantonik/oci-always-free-high-availability/archive/refs/heads/${REPO}.zip
-unzip ${REPO}.zip
-# echo copy to home
-cp -a oci-always-free-high-availability-${REPO}/server-config/* ${HOME}/
+
+wget ${REPO_URL}
+
+unzip ${REPO_BRANCH}.zip
+cp -a ${REPO_NAME}-${REPO_BRANCH}/server-config/* ${HOME}/
+
 cd ${HOME}
 ls -l
 
