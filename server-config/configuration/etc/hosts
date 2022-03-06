@@ -1,0 +1,8 @@
+27.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+10.10.1.11 demoapp1.sub01031558570.vcndemoapp.oraclevcn.com demoapp1
+10.10.1.12 demoapp2.sub01031558570.vcndemoapp.oraclevcn.com demoapp2
+10.10.1.13 demoapp3.sub01031558570.vcndemoapp.oraclevcn.com demoapp3
+10.10.1.14 demoapp4.sub01031558570.vcndemoapp.oraclevcn.com demoapp4
+
+#END

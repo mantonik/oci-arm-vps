@@ -1,0 +1,86 @@
+# https://www.nginx.com/resources/wiki/start/topics/recipes/wordpress/
+# 
+# config file with support of the Wordpress blog
+#
+server {
+  server_name DOMAIN-NAME;
+
+  #root /data/www/domain/DOMAIN-NAME/htdocs;
+  root ROOT-DIR-PATH;
+  index index.php;
+
+  gzip on;
+  gzip_vary on;
+  gzip_proxied any;
+  gzip_comp_level 6;
+  gzip_buffers 16 8k;
+  gzip_http_version 1.1;
+  gzip_types image/svg+xml text/plain text/html text/xml text/css text/javascript application/xml application/xhtml+xml application/rss+xml application/javascript application/x-javascript application/x-font-ttf application/vnd.ms-fontobject font/opentype font/ttf font/eot font/otf;
+
+  location / {
+      #try_files $uri $uri/ =404;
+      # This is cool because no php is touched for static content.
+      # include the "?$args" part so non-default permalinks doesn't break when using query string
+      try_files $uri $uri/ /index.php?$args;
+  }
+
+  location ~ \.php$ {
+      try_files $uri =404;
+      fastcgi_split_path_info ^(.+\.php)(/.+)$;
+      fastcgi_pass php-fpm;
+      fastcgi_index index.php;
+      #Add below base on nginx doc
+      fastcgi_intercept_errors on;
+      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+      include fastcgi_params;
+  }
+ location = /robots.txt {
+                allow all;
+                log_not_found off;
+                access_log off;
+        }
+
+  location = /favicon.ico {
+                log_not_found off;
+                access_log off;
+        }
+  location ~* \.(js|css|png|jpg|jpeg|gif|ico)$ {
+                expires max;
+                log_not_found off;
+        }
+
+  # Deny all attempts to access hidden files such as .htaccess, .htpasswd, .DS_Store (Mac).
+  # Keep logging the requests to parse later (or to pass to firewall utilities such as fail2ban)
+  location ~ /\. {
+      deny all;
+  }
+ 
+  # POST requests and urls with a query string should always go to PHP
+  if ($request_method = POST) {
+          set $no_cache 1;
+  }   
+
+  if ($query_string != "") {
+          set $no_cache 1;
+  } 
+  #Deny access to any files with a .php extension in the uploads directory
+  # Works in sub-directory installs and also in multisite network
+  # Keep logging the requests to parse later (or to pass to firewall utilities such as fail2ban)
+  location ~* /(?:uploads|files)/.*\.php$ {
+      deny all;
+  }
+
+  #fastcgi_cache start
+  set $no_cache 0;
+  
+  # Don't cache uris containing the following segments
+  if ($request_uri ~* "(/wp-admin/|/xmlrpc.php|/wp-(app|cron|login|register|mail).php|wp-.*.php|/feed/|index.php|wp-comments-popup.php|wp-links-opml.php|wp-locations.php|sitemap(_index)?.xml|[a-z0-9_-]+-sitemap([0-9]+)?.xml)") {
+    set $no_cache 1;
+  }   
+  
+  # Don't use the cache for logged in users or recent commenters
+  if ($http_cookie ~* "comment_author|wordpress_[a-f0-9]+|wp-postpass|wordpress_no_cache|wordpress_logged_in") {
+    set $no_cache 1;
+  }
+}
+

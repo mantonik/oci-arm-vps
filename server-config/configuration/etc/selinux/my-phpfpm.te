@@ -1,0 +1,11 @@
+
+module my-phpfpm 1.0;
+
+require {
+	type httpd_t;
+	type httpd_exec_t;
+	class file execmod;
+}
+
+#============= httpd_t ==============
+allow httpd_t httpd_exec_t:file execmod;

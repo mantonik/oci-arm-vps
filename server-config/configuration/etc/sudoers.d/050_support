@@ -1,0 +1,3 @@
+# 1/9/2022 allow support user execute all commands 
+support ALL=(ALL) NOPASSWD:ALL
+#

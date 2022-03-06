@@ -1,0 +1,23 @@
+# v1.1 
+# 1/8/2022 initial version of the root crontab file 
+# 1/9/2022 to clamav log add hostname
+############################################################################################
+# IMPORTANT
+# Do not edit this fiel 
+# create new file root.cron and then execute update_root_cron.sh from bin filder
+# this way for future release this you will not loose your custom changes
+############################################################################################
+# Update ClamAV virus definitions
+0 10 * * * /usr/bin/freshclam
+# AntiVirus scan.
+0 11 * * 1-6 /usr/bin/clamscan --detect-pua -i -r /data --log="/share/log/clamav/$HOSTNAME_clamscan_data_$(date +\%Y-\%m-\%d).log" 2>/dev/null
+20 11 * * 1-6 /usr/bin/clamscan --detect-pua -i -r /home --log="/share/log/clamav/$HOSTNAME_clamscan_home_$(date +\%Y-\%m-\%d).log" 2>/dev/null
+30 11 * * 0 /usr/bin/clamscan --detect-pua -i -r / --log="/share/log/clamav/$HOSTNAME_clamscan_full_$(date +\%Y-\%m-\%d).log" 2>/dev/null
+# Daily update.
+21 1 * * * /bin/dnf -y update
+# Daily rysnc file system between APP1 and remaining servers .
+55 0 * * * /home/opc/bin/rsync_app_servers.sh
+*/5 * * * * /home/opc/bin/rsync_app_servers.sh /data/www
+# Daily Service restart.
+0 1 * * * /home/opc/bin/services.restart.sh
+# END
