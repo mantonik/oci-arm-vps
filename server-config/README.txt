@@ -1,8 +1,9 @@
-##########
+#########################
 #
 # repository
 #
 # OCI-ARM-VPS
+#########################
 
 Script is desing to install application to run Nginx, PHP, MySQL server on set of 4 servers in OCI Cloud.
 
@@ -12,9 +13,7 @@ SErver name has should be name like
 somethingappX
 
 ...app1
-...app2
-...app3
-...app4
+
 
 ##########
 app1
@@ -31,31 +30,12 @@ unzip ${REPO}.zip
 cp -a oci-always-free-high-availability-${REPO}/server-config/* ${HOME}/
 cd ${HOME}
 ls -l
+#Execute instalation
 sudo ./bin/01.install-server-4app-2db.sh
+echo " Instalation completed"
+exit
 
 
-###########################
-app2, app3, app4
-###########################
-#!/bin/bash
-IP_SUBNET=10.10.1
-export REPO=dev-2
-export REPODIR=${HOME}/repository/${REPO}
-export https_proxy=http://${IP_SUBNET}.11:3128;
-export http_proxy=http://${IP_SUBNET}.11:3128;
-. /etc/profile
-cd ${HOME}
-rm -rf * 
-mkdir -p ${REPODIR}
-cd ${REPODIR}
-wget https://github.com/mantonik/oci-always-free-high-availability/archive/refs/heads/${REPO}.zip
-unzip ${REPO}.zip
-cp -a oci-always-free-high-availability-${REPO}/server-config/* ${HOME}/
-cd ${HOME}
-ls -l
-sudo /home/opc/bin/01.install-server-4app-2db.sh
-
-#########
 
 
 
