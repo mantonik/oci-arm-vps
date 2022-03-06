@@ -1,3 +1,9 @@
+##########
+#
+# repository
+#
+# OCI-ARM-VPS
+
 Script is desing to install application to run Nginx, PHP, MySQL server on set of 4 servers in OCI Cloud.
 
 Run below comands on respective servers as OPC user 
